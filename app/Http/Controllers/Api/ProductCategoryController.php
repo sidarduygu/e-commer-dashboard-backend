@@ -8,7 +8,12 @@ use App\Http\Controllers\ApiController;
 use App\Services\ProductCategoryService;
 
 class ProductCategoryController extends ApiController
-{     protected $productCategoryService;
+{
+
+    protected $productCategoryService;
+
+
+
     public function __construct(ProductCategoryService $productCategoryService)
     {
         $this->productCategoryService = $productCategoryService;
@@ -16,7 +21,7 @@ class ProductCategoryController extends ApiController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         return response()->json($this->productCategoryService->getAll());
     }
@@ -58,8 +63,10 @@ class ProductCategoryController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductCategory $productCategory)
+    public function destroy(int $id)
     {
-        //
+
+       $this->productCategoryService->find($id)->delete($id);
+      
     }
 }
