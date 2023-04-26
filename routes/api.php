@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DiscountController;
 use App\Http\Controllers\Api\ProductCategoryController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\Api\ProductCategoryController;
 Route::prefix('auth')->middleware('auth:sanctum')->group(function(){
     Route::apiResource('product-category', ProductCategoryController::class);
     Route::apiResource('discount', DiscountController::class);
+    Route::apiResource('product', ProductController::class);
 
 });
 
