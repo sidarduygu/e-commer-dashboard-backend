@@ -2,28 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Shipping;
 use Illuminate\Http\Request;
-use App\Services\ShippingService;
 use App\Http\Controllers\ApiController;
+use App\Models\ProductVariantOptionInventory;
 
-class ShippingController extends ApiController
+class ProductVariantOptionInventoryController extends ApiController
 {
-
-    protected $shippingservice;
-
-
-    public function __construct(ShippingService $shippingservice)
-    {
-       $this->shippingservice = $shippingservice;
-    }
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-       return response()->json($this->shippingservice->getAll());
+        return  ProductVariantOptionInventory::all();
     }
 
     /**
@@ -45,7 +35,7 @@ class ShippingController extends ApiController
     /**
      * Display the specified resource.
      */
-    public function show(Shipping $shipping)
+    public function show(ProductVariantOptionInventory $productVariantOptionInventory)
     {
         //
     }
@@ -53,7 +43,7 @@ class ShippingController extends ApiController
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Shipping $shipping)
+    public function edit(ProductVariantOptionInventory $productVariantOptionInventory)
     {
         //
     }
@@ -61,7 +51,7 @@ class ShippingController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Shipping $shipping)
+    public function update(Request $request, ProductVariantOptionInventory $productVariantOptionInventory)
     {
         //
     }
@@ -69,7 +59,7 @@ class ShippingController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Shipping $shipping)
+    public function destroy(ProductVariantOptionInventory $productVariantOptionInventory)
     {
         //
     }
