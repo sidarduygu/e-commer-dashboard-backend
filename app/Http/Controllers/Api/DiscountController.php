@@ -45,7 +45,6 @@ class DiscountController extends ApiController
     public function show(int $id)
     {
          return response()->json($this->discountService->find($id));
-
     }
 
 
@@ -53,16 +52,24 @@ class DiscountController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Discount $discount)
+    public function update(Request $request, int $id)
     {
-        //
+        try{
+            return response()->json($this->discountService->update($id,$request));
+        }catch(\Exception $e) {
+            return $e;
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Discount $discount)
+    public function destroy(int $id)
     {
-        //
+        try{
+            return response()->json($this->discountService->delete($id));
+        }catch(\Exception $e) {
+            return $e;
+        }
     }
 }
