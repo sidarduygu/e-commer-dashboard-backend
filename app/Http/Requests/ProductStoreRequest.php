@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\ProductVariant;
+
 use App\Rules\ProductVariantRule;
 use Illuminate\Foundation\Http\FormRequest;
 

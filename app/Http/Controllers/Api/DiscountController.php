@@ -6,6 +6,7 @@ use App\Models\Discount;
 use Illuminate\Http\Request;
 use App\Services\DiscountService;
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\DiscountStoreRequest;
 
 class DiscountController extends ApiController
 {
@@ -30,7 +31,7 @@ class DiscountController extends ApiController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(DiscountStoreRequest $request)
     {
         try{
             return response()->json($this->discountService->create($request));

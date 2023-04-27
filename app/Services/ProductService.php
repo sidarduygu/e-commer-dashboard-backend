@@ -27,7 +27,17 @@ class ProductService extends BaseService
 
     public function create(Request $request)
     {
-       return $this->productrepository->create($request->all());
+        $product = $this->productrepository->create($request->except('size', 'images', 'shipping_id', 'product_variants'));
+
+       if($request->has('images') && is_array($request->images) && count($request->images)){
+         $images = $request->images;
+         foreach ($images as $image) {
+            $imageData = uploadImage($image, 'product');
+            $imageData['product_id'] = $product->id;
+            $product->images()->create($imageData);
+         }
+      }
+
     }
 
     public function update(int $id, Request $request)

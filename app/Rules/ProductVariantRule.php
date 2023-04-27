@@ -42,7 +42,7 @@ class ProductVariantRule implements ValidationRule
                 return;
                 }
 
-                if(empty($item['value']) || !is_numeric($item['value'])) {
+                if(empty($item['value']) || !is_string($item['value'])) {
                     $fail("The {$attribute}  constains an item with invalid 'value' property. ");
                 return;
                 }

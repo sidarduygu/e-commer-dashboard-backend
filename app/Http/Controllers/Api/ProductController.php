@@ -6,6 +6,7 @@ use App\Models\product;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\ProductStoreRequest;
 
 
 
@@ -22,18 +23,23 @@ class ProductController extends ApiController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json($this->productService->getAll());
+        return response()->json($this->productService->getAll($request));
     }
 
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        da($request->all());
+        try{
+            return response()->json($this->productService->create($request));
+        }
+        catch(\Exception $e) {
+            return $e;
+        }
     }
 
     /**
