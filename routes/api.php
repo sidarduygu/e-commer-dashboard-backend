@@ -6,10 +6,12 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\DiscountController;
 use App\Http\Controllers\Api\ShippingController;
+use App\Http\Controllers\Api\ProductSizeController;
 use App\Http\Controllers\Api\ProductVariantController;
 use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\Api\ProductShippingController;
 use App\Http\Controllers\Api\ProductVariantOptionController;
+use App\Http\Controllers\Api\ProductVariantOptionPriceController;
 use App\Http\Controllers\Api\ProductVariantOptionInventoryController;
 
 
@@ -33,6 +35,8 @@ Route::prefix('auth')->middleware('auth:sanctum')->group(function(){
     Route::apiResource('product-variant-option-inventory', ProductVariantOptionInventoryController::class);
     Route::apiResource('product-shipping', ProductShippingController::class);
     Route::apiResource('product', ProductController::class);
+    Route::apiResource('size', ProductSizeController::class);
+    Route::apiResource('product_variant_option_price', ProductVariantOptionPriceController::class);
 
 });
 

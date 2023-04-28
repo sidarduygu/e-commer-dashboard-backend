@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
 use App\Repositories\ProductRepository;
@@ -38,6 +39,36 @@ class ProductService extends BaseService
          }
       }
 
+      $product->size()->create($request->size);
+      $product->productShipping()->create(['shipping_id' => $request->shipping_id]);
+      $this->createVariants($request->product_variants,$product);
+    }
+
+    protected function createVariants(string $productVariants, Product $product)
+    {
+        $productVariants = json_decode($productVariants,true);
+
+
+        foreach($productVariants as $variant)
+        {
+            if(is_array($variant) && isset($variant['id'])){
+                $productVariantOption = $product->product_variant_options()->create([
+                    'product_variant_id' => $variant['id'],
+                    'value' => $variant['value']
+                ]);
+
+                $product->product_variant_option_inventories()->create([
+                    'product_variant_option_id' => $productVariantOption->id,
+                    'stock' => $variant['stock']
+                ]);
+
+                 $product->product_variant_option_prices()->create([
+               'product_variant_option_id' => $productVariantOption->id,
+               'price' => $variant['price']
+                ]);
+            }
+
+        }
     }
 
     public function update(int $id, Request $request)
