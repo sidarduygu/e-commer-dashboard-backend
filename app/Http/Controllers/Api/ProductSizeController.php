@@ -13,7 +13,7 @@ class ProductSizeController extends ApiController
      */
     public function index()
     {
-        //
+       
     }
 
     /**
