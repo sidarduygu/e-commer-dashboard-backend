@@ -81,9 +81,6 @@ class Product extends Model
 
      }
 
-
-
-
      public function getProductVariantsAttribute()
      {
          $productVariants = [];

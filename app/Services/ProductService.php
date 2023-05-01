@@ -73,7 +73,7 @@ class ProductService extends BaseService
 
     public function update(int $id, Request $request)
     {
-       return $this->productrepository->update($id,$request->all());
+       $product = $this->productrepository->find($id);
     }
 
     public function delete(int $id)

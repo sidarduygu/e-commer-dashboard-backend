@@ -45,9 +45,14 @@ class ProductController extends ApiController
     /**
      * Display the specified resource.
      */
-    public function show(product $product)
+    public function show(int $id)
     {
-        //
+        try {
+            return response()->json($this->productService->find($id));
+        } catch (\Exception $e) {
+            return $e;
+            //return response()->json(['error' => 'An error occurred'], 500);
+        }
     }
 
     /**
