@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\ProductService;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 
 
 
@@ -56,19 +57,16 @@ class ProductController extends ApiController
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(product $product)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, product $product)
+    public function update(ProductUpdateRequest $request,int $id)
     {
-        //
+       
+        try{
+            return response()->json($this->productService->update($id,$request));
+        }catch (\Exception $e) {
+            return $e;
+        }
     }
 
     /**

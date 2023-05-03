@@ -6,14 +6,17 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
 use App\Repositories\ProductRepository;
+use App\Repositories\ProductVariantRepository;
 
 class ProductService extends BaseService
 {
     protected $productrepository;
+    protected $productvariantrepository;
 
-    public function __construct(ProductRepository $productrepository)
+    public function __construct(ProductRepository $productrepository, ProductVariantRepository $productvariantrepository)
     {
        $this->productrepository = $productrepository;
+       $this->productvariantrepository = $productvariantrepository;
     }
 
     public function getAll()
@@ -74,11 +77,48 @@ class ProductService extends BaseService
     public function update(int $id, Request $request)
     {
        $product = $this->productrepository->find($id);
+       $product->fill($request->except([ 'images']));
+       $product->save();
+       $this->updateProductAssociations($product,$request);
     }
 
-    public function delete(int $id)
+    protected function updateProductAssociations(Product $product, Request $request)
+   {
+       $this->manageProductImages($product, $request);
+       $product->size()->updateOrCreate([], $request->size);
+       $product->productShipping()->updateOrCreate([], ['shipping_id' => $request->shipping_id]);
+
+   }
+
+
+
+
+
+    protected function manageProductImages(Product $product , Request $request)
     {
-       return $this->productrepository->delete($id);
+        if ($request->has('deleted_images') && is_array($request->deleted_images) && count($request->deleted_images)) {
+                  foreach ($request->deleted_images as $image) {
+                    $product->images()->findOrFail($image['id'])->delete();
+                 }
+           }
+
+        if($request->has('images') && is_array($request->images) && count($request->images)){
+            $images = $request->images;
+            foreach($images as $image){
+                if($image->isValid()){
+                    $imageData = uploadImage($image, 'product');
+                    $imageData['product_id'] = $product->id;
+                    $product->Images()->create($imageData);
+                }
+            }
+        }
+    }
+
+    public function delete($id)
+    {
+        
     }
 
 }
+
+

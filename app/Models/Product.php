@@ -78,7 +78,6 @@ class Product extends Model
      {
          return optional($this->productShipping)->shipping_id;
 
-
      }
 
      public function getProductVariantsAttribute()

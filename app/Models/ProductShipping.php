@@ -11,4 +11,6 @@ class ProductShipping extends Model
 
     protected $guarded = ['product_id'];
 
+
+
 }
