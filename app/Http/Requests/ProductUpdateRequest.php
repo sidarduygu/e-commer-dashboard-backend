@@ -46,17 +46,15 @@ class ProductUpdateRequest extends FormRequest
         ];
     }
 
-
-    protected function prepareForValidation()
+    public function passedValidation()
     {
-        $filteredData = $this->all();
-
-        foreach($filteredData as $key => $data ) {
-            if(is_numeric($data)){
-                $filteredData[$key] = (int)$data;
-            }
-        }
-
-        $this->replace($filteredData);
+       $requestData = $this->except('created_at','updated_at', 'product_category', 'discount', 'product_variant_options', 'product_variant_option_inventories', 'product_variant_option_prices', 'product_shipping');
+        $this->replace(array_merge($requestData, [
+            'product_variants' => json_decode($this->product_variants, true),
+            'deleted_images' => json_decode($this->deleted_images, true),
+            'deleted_variants' => json_decode($this->deleted_variants, true),
+        ]));
     }
 }
+
+

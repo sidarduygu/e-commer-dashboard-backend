@@ -77,48 +77,72 @@ class ProductService extends BaseService
     public function update(int $id, Request $request)
     {
        $product = $this->productrepository->find($id);
-       $product->fill($request->except([ 'images']));
+       $product->fill($request->except(['size', 'images', 'shipping_id', 'product_variants', 'deleted_images', 'deleted_variants']));
        $product->save();
-       $this->updateProductAssociations($product,$request);
+       $this->updateProductAssociations($product, $request);
+    }
+
+    public function delete(int $id)
+    {
+       $product = $this->productrepository->find($id);
+       $this->deleteProductAssociations($product);
+       $product->delete();
     }
 
     protected function updateProductAssociations(Product $product, Request $request)
-   {
+    {
        $this->manageProductImages($product, $request);
        $product->size()->updateOrCreate([], $request->size);
        $product->productShipping()->updateOrCreate([], ['shipping_id' => $request->shipping_id]);
 
-   }
+       if ($request->has('deleted_variants') && is_array($request->deleted_variants) && count($request->deleted_variants)) {
+          $this->deleteVariants($request->deleted_variants, $product);
+       }
+       if ($request->has('product_variants') && is_array($request->product_variants) && count($request->product_variants)) {
+          $this->createVariants($request->productvariantrepository, $product);
+       }
+    }
 
-
-
-
-
-    protected function manageProductImages(Product $product , Request $request)
+    protected function manageProductImages(Product $product, Request $request)
     {
-        if ($request->has('deleted_images') && is_array($request->deleted_images) && count($request->deleted_images)) {
-                  foreach ($request->deleted_images as $image) {
-                    $product->images()->findOrFail($image['id'])->delete();
-                 }
-           }
+       if ($request->has('deleted_images') && is_array($request->deleted_images) && count($request->deleted_images)) {
+          foreach ($request->deleted_images as $image) {
+             $product->images()->findOrFail($image['id'])->delete();
+          }
+       }
 
-        if($request->has('images') && is_array($request->images) && count($request->images)){
-            $images = $request->images;
-            foreach($images as $image){
-                if($image->isValid()){
-                    $imageData = uploadImage($image, 'product');
-                    $imageData['product_id'] = $product->id;
-                    $product->Images()->create($imageData);
-                }
+       if ($request->has('images') && is_array($request->images) && count($request->images)) {
+          $images = $request->images;
+          foreach ($images as $image) {
+             $imageData = uploadImage($image, 'product');
+             $imageData['product_id'] = $product->id;
+             $product->images()->create($imageData);
+          }
+       }
+    }
+
+    protected function deleteProductAssociations(Product $product)
+    {
+       $product->images()->delete();
+       $product->productShipping()->delete();
+       $product->size()->delete();
+    }
+
+    protected function deleteVariants(array $deleteVariants, Product $product)
+    {
+       if (is_array($deleteVariants) && count($deleteVariants)) {
+          foreach ($deleteVariants as $variant) {
+             if (isset($variant['id'])) {
+                $product->productVariantOptionInventories()->where('stock', $variant['stock'])->delete();
+
+                $product->productVariantOptionPrices()->where('price', $variant['price'])->delete();
+
+                $product->productVariantOptions()->where('id', $variant['id'])->delete();
             }
-        }
-    }
+          }
+       }
 
-    public function delete($id)
-    {
-        
     }
-
 }
 
 
